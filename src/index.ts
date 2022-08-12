@@ -1,43 +1,52 @@
-import * as path from 'node:path'
-import { Argument, Command } from "commander"
-import * as main from './main.js'
-import {platform} from 'node:os'
+process.removeAllListeners("warning")
+import commandConfig from './commands.json' assert{type:"json"}
+import * as net from './net.js'
 
-if (platform() != 'linux') {
-  console.log("Non-linux user detected. Shutting down...")
-  process.exit(1)
+class Command {
+  public name:string = "err"
+  public description:string = "err"
+  public help:string = "err"
+  public args:{
+    name: string;
+    description: string;
+    type: string;
+    required: boolean;
+  }[]
+  constructor(public id:number) {
+    const data = this.getData(id)
+    if (!data) throw "Could not find the specified command!"
+    this.name = data.name
+    this.description = data.description
+    this.help = data.help
+    this.args = data.arguments
+  }
+  public getData(id:number = this.id) {
+    return (commandConfig.commands.filter(comm => comm.id == id)[0])
+  }
 }
 
-const program = new Command("Auto CI")
-  .description(`A package manager that manages tarballs`)
-  .version("0.1a")
+const params:string[] = []
+const args:string[] = []
 
-program.command("update")
-  .description(`Updates the registry, and installs if you proceed`)
-  .option('-y, --confirm', "Will auto confirm if you want to upgrade")
-  .action(async(args) => {
-    //if (args.confirm)
-  })
+const nodeJS = process.argv.shift()
+const cwd = process.argv.shift()
 
-program.command("debug")
-  .description("A debugging mode that does everything")
-  .action(async() => {
-    main.main()
-  })
+process.argv.forEach((arg) => {
+  if (arg.startsWith("-")) params.push(arg)
+  else args.push(arg)
+})
 
-program.command("add")
-  .description("Adds a package using a github link")
-  .addArgument(new Argument("repository", `The https url of the github repo. https://github.com/JuliaLang/julia/`))
-  .action(async(args) => {
-    const formatted = args.replace('https://github.com/', "").split("/")
-    try {
-      main.add(formatted[0], formatted[1])
-    }
-    catch(e) {
-      console.log(e)
-    }
-  })
+let command = args[0]
 
-//fuck commander to hell -- use different cli module or parse stdin myself
+const commands:Command[] = []
+for (let com of commandConfig.commands) {
+  commands.push(new Command(com.id))
+}
 
-program.parse()
+process.stdin.resume()
+
+process.stdin.on("data", async(data) => {
+  process.stdin.pause()
+  const input = data.toString().trim().split(" ").filter(arg => arg != "")
+  console.log(input)
+})

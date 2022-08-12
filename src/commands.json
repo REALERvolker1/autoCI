@@ -1,0 +1,100 @@
+{
+  "commands": [
+    {
+      "id": 0,
+      "name": "install",
+      "description": "Install a package",
+      "help": "Install a package",
+      "arguments": [
+        {
+          "name": "repository",
+          "description": "The git repo to install",
+          "type": "string",
+          "required": true
+        }
+      ]
+    },
+    {
+      "id": 1,
+      "name": "remove",
+      "description": "Remove a package",
+      "help": "Remove a package",
+      "arguments": [
+        {
+          "name": "package",
+          "description": "The git repo to remove, by packagename",
+          "type": "string",
+          "required": true
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "name": "update",
+      "description": "Look for updates, and upgrade packages if available",
+      "help": "Look for updates, and upgrade packages if available. Usage: 'update upgrade'",
+      "arguments": [
+        {
+          "name": "upgrade",
+          "description": "Upgrade packages",
+          "type": "boolean",
+          "required": false
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "name": "list",
+      "description": "List all packages",
+      "help": "List all packages",
+      "arguments": [
+        {
+          "name": "details",
+          "description": "The details of each package you have installed",
+          "type": "string",
+          "required": false
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "name": "config",
+      "description": "An alternative config file",
+      "help": "Specify an alternative config file. Replaces the current one. Run 'config reset' to revert to the default config file.",
+      "arguments": [
+        {
+          "name": "config",
+          "description": "The config filepath to use",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "reset",
+          "description": "Reset to the default config file",
+          "type": "boolean",
+          "required": false
+        }
+      ]
+    }
+  ],
+  "arguments": [
+    {
+      "name": "version",
+      "description": "Print the version",
+      "usage": "autoci -v",
+      "accepts": [
+        "-v",
+        "--version"
+      ]
+    },
+    {
+      "name": "verbose",
+      "description": "Show verbose output",
+      "usage": "autoci -V install packageLink",
+      "accepts": [
+        "-V",
+        "--verbose"
+      ]
+    }
+  ]
+}
