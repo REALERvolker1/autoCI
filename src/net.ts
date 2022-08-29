@@ -1,12 +1,8 @@
 import axios from "axios"
 
-class Repository {
-  default: string
-  constructor(owner:string, name:string) {this.default = `${owner}/${name}`}
-}
 
-async function getRelease(repo:Repository) {
-  const request = await axios.default.get(`https://api.github.com/repos/${repo.default}/releases`, {
+async function getRelease(repo:string) {
+  const request = await axios.default.get(`https://api.github.com/repos/${repo}/releases`, {
     headers: {
       accept: "application/vnd.github+json"
     }
@@ -14,8 +10,8 @@ async function getRelease(repo:Repository) {
   return request.data
 }
 
-async function getAsset(repo:Repository, assetID:string) {  
-  const request = await axios.default.get(`https://api.github.com/repos/${repo.default}/releases/assets/${assetID}`, {
+async function getAsset(repo:string, assetID:string) {  
+  const request = await axios.default.get(`https://api.github.com/repos/${repo}/releases/assets/${assetID}`, {
     headers: {
       accept: "application/octet-stream"
     }
@@ -23,4 +19,4 @@ async function getAsset(repo:Repository, assetID:string) {
   return request.data
 }
 
-export {Repository, getRelease, getAsset}
+export {getRelease, getAsset, }
